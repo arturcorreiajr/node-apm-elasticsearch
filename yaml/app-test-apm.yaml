@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-test-apm-02-deployment
+  namespace: sandbox
+  labels:
+    app: app-test-apm-02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-test-apm-02
+  template:
+    metadata:
+      labels:
+        app: app-test-apm-02
+    spec:
+      containers:
+      - name: app-test-apm-02
+        image: arturcorreiajunior/app-test-apm:latest
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: webinterface
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-test-apm-02
+  namespace: sandbox
+  labels:
+    service: app-test-apm-02
+spec:
+  type: NodePort
+  ports:
+  - port: 4000
+    name: webinterface
+  selector:
+    app: app-test-apm-02
+
+    
